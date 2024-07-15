@@ -6,22 +6,17 @@ export class LivrosService{
 
     livrosRepository: LivrosRepository = new LivrosRepository();
 
-    DeleteLivrosService(idNumber:any){
-
-        const book = this.livrosRepository.GetLivrosRepositoryID(idNumber);
-
+    async DeleteLivrosService(idNumber:any){
+        const book = await this.livrosRepository.GetLivrosRepositoryID(idNumber);
         if(!book) throw new Error('O livro não existe');
-
         this.livrosRepository.DeleteLivrosRepository(book)
+
     }
 
-    PutLivrosService(idNumber:any,  livroData:any): LivrosModel{
-
+    async PutLivrosService(idNumber:any,  livroData:any): Promise<LivrosModel> {
         const {title, author, publishedDate, isbn, pages, language, publisher  } = livroData;
-
         if (!title || !author || !publishedDate || !isbn || !pages || !language || !publisher) throw new Error("Informações incompletas");
-
-        const livroExistente = this.livrosRepository.GetLivrosRepositoryID(idNumber);
+        const livroExistente = await this.livrosRepository.GetLivrosRepositoryID(idNumber);
         if (!livroExistente) throw new Error('O livro não existe!'); 
 
         livroExistente.title = title;
@@ -32,37 +27,34 @@ export class LivrosService{
         livroExistente.language = language;
         livroExistente.publisher = publisher;
 
-        this.livrosRepository.PutLivrosRepository(livroExistente);
+        await  this.livrosRepository.PutLivrosRepository(livroExistente);
         return livroExistente;
-
     }
 
-    GetLivrosServiceID(id:any): LivrosModel{
+    async GetLivrosServiceID(id:any): Promise<LivrosModel>{
         const idNumber: number = parseInt(id, 10);
-        const verificação = this.livrosRepository.GetLivrosRepositoryID(idNumber);
-
+        const verificação = await this.livrosRepository.GetLivrosRepositoryID(idNumber);
        if(verificação)
             return verificação
        else
             throw  new Error('O Livro não existe na base de dados');
-
     }
 
-    GetLivrosService():LivrosModel[]{
-        return this.livrosRepository.GetLivrosRepository();
+    async GetLivrosService(): Promise<LivrosModel[]>{
+        return await this.livrosRepository.GetLivrosRepository();
     }
 
-    PostLivrosService(livroData: any): LivrosModel {
+    async PostLivrosService(livroData: any): Promise<LivrosModel> {
 
         const { title, author, publishedDate, isbn, pages, language, publisher } = livroData;
 
         if (!title || !author || !publishedDate || !isbn || !pages || !language || !publisher) throw new Error("Informações incompletas");
 
-        const livroExistente = this.livrosRepository.filtraPorISBNRepository(isbn);
+        const livroExistente = await this.livrosRepository.filtraPorISBNRepository(isbn);
         if (livroExistente) throw new Error('O livro já existe');
-        
+
         const novoLivro = new LivrosModel(title, author, publishedDate, isbn, pages, language, publisher);
-        this.livrosRepository.PostLivrosRepository(novoLivro);
+        await this.livrosRepository.PostLivrosRepository(novoLivro);
 
         return novoLivro;
     }

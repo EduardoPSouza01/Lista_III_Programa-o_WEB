@@ -10,9 +10,6 @@ app.listen(PORT, () => console.log("API online na porta: " + PORT));
 
 // Endpoints
 
-// Delete - Livros
-app.delete('/api/livro/:id', DeleteLivroControler);
-
 // Post - Livros
 app.post('/api/livro', PostLivroControler);
 
@@ -22,4 +19,7 @@ app.get('/api/livro/:id', GetLivroControlerID);
 
 // Put - Livros
 app.put('/api/livro/:id', PutLivroControler);
+
+// Delete - Livros
+app.delete('/api/livro/:id', DeleteLivroControler);
 
