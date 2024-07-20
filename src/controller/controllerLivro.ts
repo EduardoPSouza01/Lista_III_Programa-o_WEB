@@ -11,7 +11,11 @@ export async function DeleteLivroControler (req: Request, res: Response){
             message: 'Livro deletado com sucesso'
         })
     } catch (error: any) {
-        res.status(400).json({message: error.message})
+        if (error.message === 'O livro não existe') {
+            res.status(404).json({ message: error.message });
+        } else {
+            res.status(400).json({ message: error.message });
+        }
     }
 }
 
@@ -24,7 +28,12 @@ export async function PutLivroControler(req: Request, res: Response){
             Livro: book
         })
     } catch (error:any) {
-        res.status(400).json({message: error.message})
+        if (error.message === 'O livro não existe') {
+            res.status(404).json({ message: error.message });
+        } else {
+            res.status(400).json({ message: error.message });
+        }
+
     }
 }
 
@@ -35,7 +44,11 @@ export async function GetLivroControlerID(req: Request, res: Response){
             Livros: book
         })
     } catch (error: any) {
-        res.status(400).json({message: error.message});
+        if (error.message === 'O livro não existe') {
+            res.status(404).json({ message: error.message });
+        } else {
+            res.status(400).json({ message: error.message });
+        }
         
     }
 }
@@ -60,7 +73,10 @@ export async function PostLivroControler(req: Request, res: Response ){
             Livro: novoLivro
         })
     } catch (error: any) {
-        res.status(400).json({message: error.message});
+        if (error.message === 'O livro já existe') {
+            res.status(409).json({ message: error.message });
+        } else {
+            res.status(400).json({ message: error.message });
+        }
     }
-
 }
