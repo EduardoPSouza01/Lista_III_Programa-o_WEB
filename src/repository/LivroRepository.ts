@@ -1,44 +1,28 @@
-import mysql, { Connection, RowDataPacket, OkPacket } from 'mysql2';
+import mysql, { RowDataPacket, OkPacket } from 'mysql2';
 import { LivrosModel } from '../model/modelLivros';
+import { mysqlConnection } from '../database/mysql';
 
-const dbConfig = {
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: 'root',
-    database: 'livros'
-};
 
-const mysqlConnection: Connection = mysql.createConnection(dbConfig);
-
-mysqlConnection.connect((err) => {
-    if (err) {
-        console.error('Erro ao conectar ao banco de dados:', err);
-        throw err;
-    }
-    console.log('Conexão bem-sucedida com o banco de dados MySQL');
-
-    const createTableQuery = `
+mysqlConnection.query(`
         CREATE TABLE IF NOT EXISTS livros (
             id INT AUTO_INCREMENT PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
-            author VARCHAR(255) NOT NULL,
+            author VARCHAR(255) NOT NULL,n
             publishedDate DATE,
             isbn VARCHAR(13) UNIQUE,
             pages INT,
             language VARCHAR(50),
             publisher VARCHAR(255)
         )
-    `;
-
-    mysqlConnection.query(createTableQuery, (err) => {
+    `, (err) => {
         if (err) {
             console.error('Erro ao criar a tabela:', err);
             throw err;
         }
         console.log('Tabela livros verificada/criada com sucesso');
-    });
-});
+    }
+);
+
 
 export class LivrosRepository {
     DeleteLivrosRepository(book: LivrosModel): Promise<void> {
@@ -95,7 +79,9 @@ export class LivrosRepository {
 
     PostLivrosRepository(book: LivrosModel): Promise<void> {
         const { title, author, publishedDate, isbn, pages, language, publisher } = book;
+        
         const query = 'INSERT INTO livros (title, author, publishedDate, isbn, pages, language, publisher) VALUES (?, ?, ?, ?, ?, ?, ?)';
+
         return new Promise((resolve, reject) => {
             mysqlConnection.query(query, [title, author, publishedDate, isbn, pages, language, publisher], (err) => {
                 if (err) return reject(err);

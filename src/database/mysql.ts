@@ -31,3 +31,5 @@ export function executarComandoSQL(query: string, valores: any[]): Promise<any> 
         }
     )
 }
+
+export {mysqlConnection}
